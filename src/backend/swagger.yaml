@@ -1,0 +1,388 @@
+openapi: "3.0.3"
+info:
+  description: "Esta é a documentação da API para gerenciamento de eventos para a disciplina de Programação Web, onde se encontram os endpoints usados pela API."
+  version: "1.0.0"
+  title: "API Gerenciamento de Eventos"
+
+servers:
+  - url: http://localhost:8081
+    description: "API executando em localhost"
+  - url: http://luli.ferreira.lucas.vms.ufsc.br:3000
+    description: "API executando no servidor UFSC (através da VPN UFSC)"
+
+tags:
+  - name: "api"
+    description: "Operações que lidam com o funcionamento da API"
+  - name: "usuários"
+    description: "Operações que lidam com usuários"
+  - name: "eventos"
+    description: "Operações que lidam com eventos"
+
+paths:
+  /:
+    get:
+      tags:
+        - "api"
+      summary: "Checa se a API está executando"
+
+      responses:
+        "200":
+          $ref: "#/components/responses/ServidorOK"
+
+  /cadastrousuario:
+    post:
+      tags:
+        - "usuários"
+      summary: "Cadastra um usuário"
+      requestBody:
+        description: ""
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Usuário"
+      
+      responses:
+        "200":
+          $ref: "#/components/responses/OK"
+
+  /cadastrar:
+    post:
+      tags:
+        - "usuários"
+      summary: "Cadastra um usuário ou faz login"
+      requestBody:
+        description: ""
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginUsuário"
+      responses:
+        "200":
+          $ref: "#/components/responses/GoogleId"
+
+  /listacandidatos:
+    get:
+      tags:
+        - "usuários"
+      summary: "Retorna uma lista com todos os candidatos da aplicação"
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Usuários"
+
+
+  /candidatarse:
+    post:
+      tags:
+        - "usuários"
+      summary: "Candidata um usuário em um evento"
+      requestBody:
+        description: ""
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CandidatarRequest"
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Sucesso"
+
+
+  /cadastroevento:
+    post:
+      tags:
+        - "usuários"
+      summary: "Cadastra um evento"
+      requestBody:
+        description: ""
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Evento"
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Sucesso"
+
+
+  /listaeventos:
+    get:
+      tags:
+        - "eventos"
+      summary: "Retorna uma com todos os eventos cadastrados na aplicação"
+      responses:
+        "200":
+          $ref: "#/components/responses/EventosBD"
+
+  /candidatosNoEvento:
+    get:
+      tags:
+        - "eventos"
+      summary: "Retorna uma lista com os candidatos em um evento"
+      requestBody:
+        description: ""
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventoId"
+
+      responses:
+        "200":
+          $ref: "#/components/responses/ListaCandidatos"
+
+
+  /excluirevento:
+    post:
+      tags:
+        - "eventos"
+      summary: "Exclui um evento da aplicação"
+      requestBody:
+        description: ""
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventoId"
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Status"
+
+components:
+  responses:
+    OK:
+      description: "Success"
+
+    Sucesso:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Sucesso"
+
+    ServidorOK:
+      description: "Success"
+      content:
+        text/plain:
+          schema:
+            $ref: "#/components/schemas/ServidorOK"
+
+    GoogleId:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GoogleId"
+
+    Usuários:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UsuáriosBD"
+
+    RespostaTrue:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RespostaTrue"
+
+    EventosBD:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/EventosBD"
+
+    ListaCandidatos:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ListaCandidatos"
+
+    Status:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Status"
+
+  schemas:
+    ServidorOK:
+      type: "string"
+      default: "Servidor rodando!"
+
+    Sucesso:
+      type: object
+      properties:
+        texto:
+          type: "string"
+          default: "sucesso!"
+
+    Usuário:
+      type: "object"
+      properties:
+        nome:
+          type: "string"
+        pronome:
+          type: "string"
+        CPF:
+          type: "string"
+        nascimento:
+          type: "string"
+        telefone:
+          type: "string"
+        sobre:
+          type: "string"
+        email:
+          type: "string"
+          format: "email"
+        imageUrl:
+          type: "string"
+        googleId:
+          type: "string"
+        type:
+          type: "string"
+
+    UsuárioBD:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        googleId:
+          type: "string"
+        email:
+          type: "string"
+          format: "email"
+        givenName:
+          type: "string"
+        familyName:
+          type: "string"
+        imageUrl:
+          type: "string"
+
+    GoogleId:
+      type: "object"
+      properties:
+        googleId:
+          type: "string"
+
+    LoginUsuário:
+      type: "object"
+      properties:
+        googleId:
+          type: "string"
+        email:
+          type: "string"
+          format: "email"
+        givenName:
+          type: "string"
+        familyName:
+          type: "string"
+        imageUrl:
+          type: "string"
+
+    UsuáriosBD:
+      type: "object"
+      properties:
+        usuarios:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UsuárioBD"
+
+    CandidatarRequest:
+      type: "object"
+      properties:
+        idEvento:
+          type: "string"
+        googleId:
+          type: "string"
+
+    Evento:
+      type: "object"
+      properties:
+        nomeEvento:
+          type: "string"
+        data:
+          type: "string"
+        horario:
+          type: "string"
+        descricao:
+          type: "string"
+        cargaHoraria:
+          type: "string"
+        remuneracao:
+          type: "string"
+        setor:
+          type: "string"
+        googleId:
+          type: "string"
+
+    RespostaTrue:
+      type: "object"
+      properties:
+        resposta:
+          type: "boolean"
+          default: true
+
+    EventosBD:
+      type: "object"
+      properties:
+        eventos:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/EventoBD"
+
+    EventoDB:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        nomeEvento:
+          type: "string"
+        data:
+          type: "string"
+        horario:
+          type: "string"
+        descricao:
+          type: "string"
+        cargaHoraria:
+          type: "string"
+        remuneracao:
+          type: "string"
+        setor:
+          type: "string"
+        googleId:
+          type: "string"
+        candidatos:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UsuárioBD"
+
+    EventoId:
+      type: "object"
+      properties:
+        eventoId:
+          type: "string"
+
+    ListaCandidatos:
+      type: "object"
+      properties:
+        candidatos:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UsuárioBD"
+
+    Status:
+      type: "object"
+      properties:
+        status:
+          type: "string"
+          default: "200"

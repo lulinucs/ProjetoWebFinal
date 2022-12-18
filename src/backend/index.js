@@ -2,6 +2,12 @@ const express = require("express");
 const app = express();
 const cors = require("cors")
 
+// Setting up Swagger
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger.yaml');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 const {MongoClient, ExplainVerbosity, ObjectId} = require('mongodb');
 const DB_NAME = 'teste-db';
 const MONGO_URL = 'mongodb://0.0.0.0/27017/${DB_NAME}';
